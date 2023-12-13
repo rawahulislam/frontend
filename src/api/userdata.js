@@ -22,3 +22,14 @@ export const AllUsersPost = async (PostData) => {
 
   }
 };
+
+
+export const DeleteUser = async (deleteName) => {
+  try {
+    await axios.delete(`http://127.0.0.1:3001/delete/${deleteName}`);
+  } catch (err) {
+    console.log(err);
+    alert("failed to delete");
+
+  }
+};

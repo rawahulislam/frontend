@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import "../css/landingpage.css";
 import { AllUsers } from "../api/userdata";
-import { AllUsersPost } from "../api/userdata";
+import { AllUsersPost, DeleteUser } from "../api/userdata";
 
 const Landingpage = () => {
   const [data, setData] = useState([]);
@@ -17,85 +17,98 @@ const Landingpage = () => {
   };
 
   useEffect(() => {
-        Userdata();
-
-  }, [formData]); 
+    Userdata();
+  }, [formData]);
 
   const handleSubmit = async (e) => {
-  try{
+    try {
+      const Data = { name, address, city, password };
 
-    
-    const Data = { name, address, city, password };
-
-    setFormData(Data);
-    await AllUsersPost(Data);
-  }
-
-  catch(error){
-    if (error.response && error.response.status === 401) {
+      setFormData(Data);
+      await AllUsersPost(Data);
+      alert("user added");
+      window.location.reload();
+    } catch (error) {
+      if (error.response && error.response.status === 401) {
         // Handle invalid credentials error
-        console.log(error.response)
+        console.log(error.response);
         alert("Invalid credentials");
       } else {
         alert("Invalid credentials");
       }
-  }
-  
-
+    }
   };
 
+  const handleDelete = (name) => {
 
-  
+  DeleteUser(name)
+  alert("user deleted")
+  window.location.reload();
 
-if (data.length === undefined )
-return <></>
-else
-  return (
-    <div className="landingContainer">
-      <div>
-        <div>
-          Name
-          <input
-            type="text"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-          />
-        </div>
-        <div>
-          City
-          <input
-            type="text"
-            value={city}
-            onChange={(e) => setCity(e.target.value)}
-          />
-        </div>
-        <div>
-          Address
-          <input
-            type="text"
-            value={address}
-            onChange={(e) => setAddress(e.target.value)}
-          />
-        </div>
-        <div>
-          Password <input onChange={(e) => setPassword(e.target.value)} />
-          <button onClick={handleSubmit} type="button">
-            Submit
-          </button>
-        </div>
-      </div>
 
-      {data.map((e, ind) => {
-        return (
-          <div key={ind}>
-            <div> Name : {e.name} </div>
-            <div> Address : {e.address} </div>
-            <div> City : {e.city}</div>
+  }
+
+
+
+  // if (data.length === 0 || undefined ||  data === null) return <></>;
+  // else
+    return (
+      <div className="landingContainer">
+        <div>
+          <div>
+            Name
+            <input
+              type="text"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+            />
           </div>
-        );
-      })}
-    </div>
-  );
+          <div>
+            City
+            <input
+              type="text"
+              value={city}
+              onChange={(e) => setCity(e.target.value)}
+            />
+          </div>
+          <div>
+            Address
+            <input
+              type="text"
+              value={address}
+              onChange={(e) => setAddress(e.target.value)}
+            />
+          </div>
+          <div>
+            Password <input onChange={(e) => setPassword(e.target.value)} />
+            <button onClick={handleSubmit} type="button">
+              Submit
+            </button>
+          </div>
+        </div>
+        <table>
+          <th>
+            <th>Name</th>
+            <th>City</th>
+            <th>Address</th>
+            <th>Action</th>
+
+            {data.map((e, ind) => {
+              return (
+                <tr key={ind}>
+                  <td>{e.name}</td>
+                  <td>{e.address} </td>
+                  <td>{e.city}</td>
+                  <td><button onClick={()=>handleDelete(e.name)}>Delete</button></td>
+
+
+                </tr>
+              );
+            })}
+          </th>
+        </table>
+      </div>
+    );
 };
 
 export default Landingpage;
